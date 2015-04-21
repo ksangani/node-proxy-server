@@ -46,8 +46,6 @@ http.createServer((req, res) => {
 }).listen(8000)
 
 http.createServer((req, res) => {
-	logStream.write(`\nProxying request to: ${destinationUrl + req.url}`)
-	
 	let url
 	if (req.headers['x-destination-url']) {
     	url = req.headers['x-destination-url']
@@ -62,12 +60,13 @@ http.createServer((req, res) => {
 		url:url
 	}
 
-	logStream.write('\nProxy Request:\n' + JSON.stringify(req.headers))
-	through(req, logStream, {autoDestroy: true})
+  logStream.write(`\nProxying request to: ${url}`)
+  logStream.write('\nProxy Request:\n' + JSON.stringify(req.headers))
+  through(req, logStream, {autoDestroy: true})
 
-  	let response = req.pipe(request(options))
-  	through(response, logStream, {autoDestroy: false})
-  	response.pipe(res)
+  let response = req.pipe(request(options))
+  through(response, logStream, {autoDestroy: false})
+  response.pipe(res)
 }).listen(8001)
 
 console.log(`Accepting requests at: http://127.0.0.1:8001`)
