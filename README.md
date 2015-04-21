@@ -17,5 +17,5 @@ Completed:
 * [] Optional: Supports HTTPS
 * [X] Optional: `-h` argument prints CLI API
 
-![Video Walkthrough](name of your gif file.gif)
+![Video Walkthrough](node-proxy.gif)
 
