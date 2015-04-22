@@ -2,37 +2,47 @@ let http = require('http')
 let fs = require('fs')
 let request = require('request')
 let through = require('through')
+let spawn = require('child_process').spawn
 
 let argv = require('yargs')
-	.usage('\nUsage: $0 [options]')
-  	.help('help').alias('help', 'h')
-  	.version('1.0.0', 'version').alias('version', 'V')
-  	.options({
-    	logFile: {
-      		description: "Log file name"
-    	},
-    	url: {
-      		description: "Destination server URL"
-    	},
-    	host: {
-      		description: "Destination server host",
-      		default: '127.0.0.1'
-    	},
-    	port: {
-      		description: "Destination server port",
-      		default: '8000'
-    	}
-  	})
-  	.example('$0 --host localhost', 'Proxies requests to http://localhost:8000')
-  	.example('$0 --port 9000', 'Proxies requests to http://127.0.0.1:9000')
-  	.example('$0 --url http://www.google.com', 'Proxies requests to http://www.google.com')
-  	.example('$0 --logFile /tmp/node-proxy.log', 'Logs to /tmp/node-proxy.log')
+  .usage('\nUsage: $0 [options]')
+	.help('help').alias('help', 'h')
+  .version('1.0.0', 'version').alias('version', 'V')
+  .options({
+   	logFile: {
+     		description: "Log file name"
+   	},
+   	url: {
+     		description: "Destination server URL"
+   	},
+   	host: {
+     		description: "Destination server host",
+     		default: '127.0.0.1'
+   	},
+   	port: {
+     		description: "Destination server port",
+     		default: '8000'
+    },
+    exec: {
+        description: "Executes the given command as child process"
+    }
+  })
+  .example('$0 --host localhost', 'Proxies requests to http://localhost:8000')
+  .example('$0 --port 9000', 'Proxies requests to http://127.0.0.1:9000')
+  .example('$0 --url http://www.google.com', 'Proxies requests to http://www.google.com')
+  .example('$0 --logFile /tmp/node-proxy.log', 'Logs to /tmp/node-proxy.log')
+  .example('$0 --exec grep require', 'Executes "grep require" as child process')
 	.epilog('For more information visit codepath.com')
 	.argv
 let scheme = 'http://'
 let port = argv.port || argv.host === '127.0.0.1' ? 8000 : 80	
 let destinationUrl = argv.url || scheme + argv.host + ':' + port
 let logStream = argv.logFile ? fs.createWriteStream(argv.logFile) : process.stdout
+
+if(argv.exec) {
+  spawn(argv.exec, argv._, { stdio: 'inherit'});
+  process.exit()
+}
 
 http.createServer((req, res) => {
 	logStream.write(`\nRequest received at: ${req.url}`)

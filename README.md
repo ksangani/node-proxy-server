@@ -12,10 +12,13 @@ Completed:
 * [X] Required: The destination server is configurable via the `x-destination-url` header
 * [X] Required: Client requests and respones are printed to stdout
 * [X] Required: The `--logfile` argument outputs all logs to the file specified instead of stdout
-* [] Optional: The `--exec` argument proxies stdin/stdout to/from the destination program
+* [X] Optional: The `--exec` argument proxies stdin/stdout to/from the destination program
+* [X] Optional: `-h` argument prints CLI API
 * [] Optional: The `--loglevel` argument sets the logging chattiness
 * [] Optional: Supports HTTPS
-* [X] Optional: `-h` argument prints CLI API
 
+## Required functionalities
 ![Video Walkthrough](node-proxy.gif)
 
+## Optional functionalities (-h and --exec)
+![Video Walkthrough](node-proxy-optional.gif)
